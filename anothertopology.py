@@ -15,6 +15,7 @@ if '__main__' == __name__:
   r1.cmd('ifconfig r1-eth1  10.0.0.1 netmask 255.255.255.0')
   r1.cmd("echo 1 > /proc/sys/net/ipv4/ip_forward")
   r1.cmd("iptables -t nat -A POSTROUTING -o r1-eth1 -s 192.168.1.0/24 -j MASQUERADE")
+  r1.cmd("sudo chmod 777 /var/lib/dhcp/dhcpd.leases")
   r1.cmd("dhcpd -f -4 -cf /etc/dhcp/dhcpd.conf &")
   h1.cmd("ifconfig h1-eth0 0")
   h1.cmd("dhclient h1-eth0")
