@@ -3,6 +3,9 @@ from ryu.controller import ofp_event
 from ryu.controller.handler import MAIN_DISPATCHER
 from ryu.controller.handler import set_ev_cls
 from ryu.ofproto import ofproto_v1_0
+from ryu.lib.packet import packet
+from ryu.lib.packet import arp
+from ryu.lib.packet import dhcp
 
 class L2Switch(app_manager.RyuApp):
     OFP_VERSIONS = [ofproto_v1_0.OFP_VERSION]
@@ -17,18 +20,16 @@ class L2Switch(app_manager.RyuApp):
         ofp = dp.ofproto
         ofp_parser = dp.ofproto_parser
         
-        print("A new package sent")
-        # if package = dhcp.receive then
-        #   for arrays com mac 
-        #       if mac_received != array[i]
-        #           block
-        #       else
-        #           continue
-        actions = [ofp_parser.OFPActionOutput(ofp.OFPP_FLOOD)]
-        out = ofp_parser.OFPPacketOut(
-            datapath=dp, buffer_id=msg.buffer_id, in_port=msg.in_port,
-            actions=actions)
-        dp.send_msg(out)
         
+        pkt = packet.Packet(msg.data)
+        dhcpPacket = pkt.get_protocol(dhcp.dhcp)
+        if dhcpPacket != '' and dhcpPacket != None:
+            if dhcpPacket.chaddr != '00:00:00:00:00:05':
+                print "Not valid. Discarding packet.\n"
+            else:
+                actions = [ofp_parser.OFPActionOutput(ofp.OFPP_FLOOD)]
+                out = ofp_parser.OFPPacketOut(datapath=dp, buffer_id=msg.buffer_id, in_port=msg.in_port, actions=actions)
+                dp.send_msg(out)
 
 # ryu-manager ryuapplication.py
+# https://ryu.readthedocs.io/en/latest/library_packet_ref/packet_dhcp.html
