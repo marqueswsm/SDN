@@ -16,12 +16,19 @@ class L2Switch(app_manager.RyuApp):
         dp = msg.datapath
         ofp = dp.ofproto
         ofp_parser = dp.ofproto_parser
-
+        
+        print("A new package sent")
+        # if package = dhcp.receive then
+        #   for arrays com mac 
+        #       if mac_received != array[i]
+        #           block
+        #       else
+        #           continue
         actions = [ofp_parser.OFPActionOutput(ofp.OFPP_FLOOD)]
         out = ofp_parser.OFPPacketOut(
             datapath=dp, buffer_id=msg.buffer_id, in_port=msg.in_port,
             actions=actions)
         dp.send_msg(out)
-        print("\nA new package sent\n")
+        
 
 # ryu-manager ryuapplication.py
