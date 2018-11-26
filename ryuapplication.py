@@ -24,7 +24,6 @@ class L2Switch(app_manager.RyuApp):
         pkt = packet.Packet(msg.data)
 	#print "\n", pkt[0].src
         if pkt[0].src == '00:00:00:00:00:03' or pkt[0].src == '00:00:00:00:00:05':
-		print "VAI.\n"
         	actions = [ofp_parser.OFPActionOutput(ofp.OFPP_FLOOD)]
        		out = ofp_parser.OFPPacketOut(datapath=dp, buffer_id=msg.buffer_id, in_port=msg.in_port, actions=actions)
         	dp.send_msg(out)
