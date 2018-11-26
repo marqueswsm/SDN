@@ -26,6 +26,13 @@ def topology():
     s2.start([c1])
     c1.start()
 
+    h1.cmd("sudo rm /etc/dhcp/dhcpd.conf")
+    h1.cmd("sudo cp dhcpd.conf /etc/dhcp/dhcpd.conf")
+    h1.cmd("sudo chmod 777 /etc/dhcp/dhcpd.conf")
+    h1.cmd("dhcpd -f -4 -cf /etc/dhcp/dhcpd.conf &")
+
+    h3.cmd("dhclient h3-eth0")
+
     CLI( net )
 
     net.stop()
