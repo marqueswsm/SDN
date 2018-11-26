@@ -21,6 +21,7 @@ Then, we need to alter the dhcpd.conf file:
   # get the file to copy from this repository
   sudo cp dhcpd.conf /etc/dhcp/
   sudo chmod 777 /etc/dhcp/dhcpd.conf
+  sudo chmod 777 /var/lib/dhcp/dhcpd.leases
 ```
 
 ....
