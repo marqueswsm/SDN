@@ -27,4 +27,14 @@ Then, we need to alter the dhcpd.conf file:
 
 Constrution. 
 
+On the h1, execute:
+```bash
+  dhcpd -f -4 -cf /etc/dhcp/dhcpd.conf
+```
+
+On the other hand, on the h3 host, run:
+```bash
+  hdclient h3-eth0
+```
+
 
