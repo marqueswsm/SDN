@@ -22,11 +22,28 @@ class L2Switch(app_manager.RyuApp):
         
         
         pkt = packet.Packet(msg.data)
-	#print "\n", pkt[0].src
-        if pkt[0].src == '00:00:00:00:00:03' or pkt[0].src == '00:00:00:00:00:05':
-		actions = [ofp_parser.OFPActionOutput(ofp.OFPP_FLOOD)]
-       		out = ofp_parser.OFPPacketOut(datapath=dp, buffer_id=msg.buffer_id, in_port=msg.in_port, actions=actions)
-        	dp.send_msg(out)
+        dhcpPacket = pkt.get_protocols(dhcp.dhcp)
+        if dhcpPacket:
+            # print dhcpPacket
+            print "dhcpPacket.chaddr ", dhcpPacket[0].chaddr
+            if dhcpPacket[0].chaddr != '00:00:00:00:00:05':
+                print "Not valid. Discarding packet.\n"
+            else:
+                print "It's valid. Saving packet.\n"
+                actions = [ofp_parser.OFPActionOutput(ofp.OFPP_FLOOD)]
+                out = ofp_parser.OFPPacketOut(datapath=dp, buffer_id=msg.buffer_id, in_port=msg.in_port, actions=actions)
+                dp.send_msg(out)
+        else:
+            print "It's not a DHCP packet."
+            actions = [ofp_parser.OFPActionOutput(ofp.OFPP_FLOOD)]
+            out = ofp_parser.OFPPacketOut(datapath=dp, buffer_id=msg.buffer_id, in_port=msg.in_port, actions=actions)
+            dp.send_msg(out)
+
 
 # ryu-manager ryuapplication.py
-# https://ryu.readthedocs.io/en/latest/library_packet_ref/packet_dhcp.html
+# DHCP.PY SOURCE: https://raw.githubusercontent.com/Ryuretic/RyureticLabs/master/ryu/ryu/app/Ryuretic/Support_Files/dhcp.py
+# LOCALES ERROR FIX: https://stackoverflow.com/questions/14547631/python-locale-error-unsupported-locale-setting
+    # export LC_ALL="en_US.UTF-8"
+    # export LC_CTYPE="en_US.UTF-8"
+    # sudo dpkg-reconfigure locales
+
