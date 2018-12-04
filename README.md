@@ -66,33 +66,21 @@ Start mininet
 
 # Tutorial
 
-Firstly, we need install a DHCP service. Then, execute:
+Firstly, we need to install a DHCP service. To do that, you have to execute:
 ```bash
   sudo apt update
   sudo apt install isc-dhcp-server
 ```
 
-Then, we need to change the dhcpd.conf file:
-```bash
-  sudo rm /etc/dhcp/dhcpd.conf
-  # get the file to copy from this repository
-  sudo cp dhcpd.conf /etc/dhcp/
-  sudo chmod 777 /etc/dhcp/dhcpd.conf
-  sudo chmod 777 /var/lib/dhcp/dhcpd.leases
+# Executing the attack
+
+First it is necessary to build the topology, be sure that you are inside the SDN folder:
 ```
-
-....
-
-Constrution. 
-
-On the h1, execute:
-```bash
-  dhcpd -f -4 -cf /etc/dhcp/dhcpd.conf
+$ sudo python topology.py
 ```
-
-On the other hand, on the h3 host, run:
-```bash
-  hdclient h3-eth0
+After that you need to open one of the nodes that were created by the topology and start the attack:
 ```
-
+$ xterm h2
+$ sudo python ataque.py
+```
 
