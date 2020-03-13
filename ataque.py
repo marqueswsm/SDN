@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-#Waguininho das gurias! <3
+#Waguininho
 import sys
 import os
 from scapy.all import *
